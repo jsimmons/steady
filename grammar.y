@@ -2,7 +2,7 @@
 %token_type {SToken*}
 
 %syntax_error {
-    fprintf(stderr, "Huston We Have a Problem over at %d:%d\n", TOKEN->line,
+    fprintf(stderr, "Houston We Have a Problem over at %d:%d\n", TOKEN->line,
             TOKEN->column);
 }
 
@@ -14,25 +14,31 @@
 %right NOT.
 %nonassoc PAREN ASSIGN BASSIGN COLON.
 
-module ::= exprlist.
+module ::= chunk.
 
-exprlist ::= expr.
-exprlist ::= exprlist expr.
+chunk ::= .
+chunk ::= chunk expr.
+block ::= LBRACE chunk RBRACE.
+
+ident ::= NAME.
+tname ::= NAME.
 
 literal ::= INTEGER.
 literal ::= FLOAT.
 literal ::= OCTET.
 literal ::= STRING.
+literal ::= NULL.
+literal ::= FALSE.
+literal ::= TRUE.
+literal ::= block.
 
-ident ::= NAME.
-tname ::= NAME.
-
-expr ::= literal.
-
-expr ::= ident.
 expr ::= ident COLON tname.
 expr ::= ident COLON tname ASSIGN expr.
+expr ::= ident ASSIGN expr.
 expr ::= ident BASSIGN expr.
+
+expr ::= ident.
+expr ::= literal.
 
 expr ::= LPAREN expr RPAREN. [PAREN]
 

@@ -31,7 +31,7 @@ typedef struct
 #include "grammar.h"
 #include "grammar.c"
 
-#define COL() ts - last_newline
+#define COL() (ts - last_newline)
 
 #define BASIC_INFO() do { \
         token.line = line; \
@@ -61,6 +61,36 @@ typedef struct
     comment = '//' any_safe*;
 
     main := |*
+        ':'  => { SIMPLE_TOKEN(TOK_COLON); };
+        '='  => { SIMPLE_TOKEN(TOK_ASSIGN); };
+        ':=' => { SIMPLE_TOKEN(TOK_BASSIGN); };
+        '~'  => { SIMPLE_TOKEN(TOK_NOT); };
+        '+'  => { SIMPLE_TOKEN(TOK_ADD); };
+        '-'  => { SIMPLE_TOKEN(TOK_SUB); };
+        '*'  => { SIMPLE_TOKEN(TOK_MUL); };
+        '/'  => { SIMPLE_TOKEN(TOK_DIV); };
+        '%'  => { SIMPLE_TOKEN(TOK_MOD); };
+        '&'  => { SIMPLE_TOKEN(TOK_BAND); };
+        '|'  => { SIMPLE_TOKEN(TOK_BOR); };
+        '^'  => { SIMPLE_TOKEN(TOK_BXOR); };
+        '<<' => { SIMPLE_TOKEN(TOK_LSHIFT); };
+        '>>' => { SIMPLE_TOKEN(TOK_RSHIFT); };
+        '&&' => { SIMPLE_TOKEN(TOK_AND); };
+        '||' => { SIMPLE_TOKEN(TOK_OR); };
+        '<'  => { SIMPLE_TOKEN(TOK_LT); };
+        '<=' => { SIMPLE_TOKEN(TOK_LE); };
+        '==' => { SIMPLE_TOKEN(TOK_EQ); };
+        '~=' => { SIMPLE_TOKEN(TOK_NE); };
+        '>=' => { SIMPLE_TOKEN(TOK_GE); };
+        '>'  => { SIMPLE_TOKEN(TOK_GT); };
+        '('  => { SIMPLE_TOKEN(TOK_LPAREN); };
+        ')'  => { SIMPLE_TOKEN(TOK_RPAREN); };
+        '{'  => { SIMPLE_TOKEN(TOK_LBRACE); };
+        '}'  => { SIMPLE_TOKEN(TOK_RBRACE); };
+        'null'  => { SIMPLE_TOKEN(TOK_NULL); };
+        'false'  => { SIMPLE_TOKEN(TOK_FALSE); };
+        'true'  => { SIMPLE_TOKEN(TOK_TRUE); };
+
         name => {
             BASIC_INFO();
             token.data.str.len = te - ts;
@@ -94,35 +124,6 @@ typedef struct
             token.data.str.ptr = ts + 1;
             Parse(parser, TOK_STRING, &token);
         };
-
-        ':'  => { SIMPLE_TOKEN(TOK_COLON); };
-        '='  => { SIMPLE_TOKEN(TOK_ASSIGN); };
-        ':=' => { SIMPLE_TOKEN(TOK_BASSIGN); };
-        '~'  => { SIMPLE_TOKEN(TOK_NOT); };
-        '+'  => { SIMPLE_TOKEN(TOK_ADD); };
-        '-'  => { SIMPLE_TOKEN(TOK_SUB); };
-        '*'  => { SIMPLE_TOKEN(TOK_MUL); };
-        '/'  => { SIMPLE_TOKEN(TOK_DIV); };
-        '%'  => { SIMPLE_TOKEN(TOK_MOD); };
-        '&'  => { SIMPLE_TOKEN(TOK_BAND); };
-        '|'  => { SIMPLE_TOKEN(TOK_BOR); };
-        '^'  => { SIMPLE_TOKEN(TOK_BXOR); };
-        '<<' => { SIMPLE_TOKEN(TOK_LSHIFT); };
-        '>>' => { SIMPLE_TOKEN(TOK_RSHIFT); };
-        '&&' => { SIMPLE_TOKEN(TOK_AND); };
-        '||' => { SIMPLE_TOKEN(TOK_OR); };
-        '<'  => { SIMPLE_TOKEN(TOK_LT); };
-        '<=' => { SIMPLE_TOKEN(TOK_LE); };
-        '==' => { SIMPLE_TOKEN(TOK_EQ); };
-        '~=' => { SIMPLE_TOKEN(TOK_NE); };
-        '>=' => { SIMPLE_TOKEN(TOK_GE); };
-        '>'  => { SIMPLE_TOKEN(TOK_GT); };
-        '('  => { SIMPLE_TOKEN(TOK_LPAREN); };
-        ')'  => { SIMPLE_TOKEN(TOK_RPAREN); };
-        '['  => { SIMPLE_TOKEN(TOK_LBRACKET); };
-        ']'  => { SIMPLE_TOKEN(TOK_RBRACKET); };
-        #'{'  => { SIMPLE_TOKEN(TOK_RBRACE); };
-        #'}'  => { SIMPLE_TOKEN(TOK_LBRACE); };
 
         space -- newline;
         comment;

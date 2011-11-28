@@ -1,5 +1,9 @@
-a : int = 4
-b : float = 1.4
-c : char = 'h'
-foo := (10 + 2) * 10
-main := 10 + 15 + a * b
+foo = bar * 2.1
+
+main := {
+    a := 10.0
+    b := "Hello, World!"
+    c : char = 'q'
+
+    result := (a + 2.1) * 3
+}
