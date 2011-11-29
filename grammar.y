@@ -12,7 +12,7 @@
 %left ADD SUB BOR BXOR.
 %left MUL DIV MOD LSHIFT RSHIFT BAND.
 %right NOT.
-%nonassoc LPAREN ASSIGN BASSIGN COLON.
+%nonassoc LPAREN LBRACKET ASSIGN BASSIGN COLON.
 
 module ::= chunk.
 
@@ -25,11 +25,8 @@ block ::= LBRACE chunk endstat RBRACE.
 
 ident ::= NAME.
 
-// This is horrible and breaks indexing.
-brackets ::= .
-brackets ::= brackets LBRACKET RBRACKET.
-
-type ::= NAME brackets.
+type ::= NAME.
+type ::= type index.
 type ::= type FSIG LPAREN bindlist RPAREN.
 
 literal ::= INTEGER.
@@ -41,6 +38,12 @@ literal ::= FALSE.
 literal ::= TRUE.
 literal ::= block.
 
+bindlist ::= .
+bindlist ::= bind.
+bindlist ::= bindlist COMMA bind.
+
+bind ::= ident COLON type.
+
 call ::= expr LPAREN exprlist RPAREN.
 
 stat ::= IF LPAREN expr RPAREN block.
@@ -50,29 +53,30 @@ stat ::= WHILE LPAREN expr RPAREN block.
 stat ::= DO block WHILE LPAREN expr RPAREN.
 
 // TODO: Fix explicit semi-coloning.
+stat ::= bind SEMICOLON.
+stat ::= bind ASSIGN expr SEMICOLON.
+stat ::= bind ASSIGN call SEMICOLON.
+stat ::= ident ASSIGN expr SEMICOLON.
+stat ::= ident ASSIGN call SEMICOLON.
+stat ::= ident BASSIGN expr SEMICOLON.
+stat ::= ident BASSIGN call SEMICOLON.
+
 endstat ::= .
 endstat ::= RETURN expr SEMICOLON.
 endstat ::= BREAK SEMICOLON.
 endstat ::= CONTINUE SEMICOLON.
 
-bindlist ::= .
-bindlist ::= bind.
-bindlist ::= bindlist COMMA bind.
-
-bind ::= ident COLON type.
+index ::= LBRACKET RBRACKET.
+index ::= LBRACKET expr RBRACKET.
 
 exprlist ::= .
 exprlist ::= expr.
 exprlist ::= exprlist COMMA expr.
 
-expr ::= ident.
-expr ::= literal.
+expr ::= expr index.
 
-expr ::= bind.
-// name := args[0];
-expr ::= bind ASSIGN expr.
-expr ::= ident ASSIGN expr.
-expr ::= ident BASSIGN expr.
+expr ::= literal.
+expr ::= ident.
 
 expr ::= LPAREN expr RPAREN.
 

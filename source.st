@@ -9,9 +9,7 @@ find_area : float <- (r : float) = {
 };
 
 main : int <- (args : u8[][]) = {
-    // Fucking indexing, how do you parse?
-    // name := args[0];
-    name := args;
+    name := args[0][1];
 
     if(name == "a.out")
     {
