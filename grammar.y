@@ -12,16 +12,25 @@
 %left ADD SUB BOR BXOR.
 %left MUL DIV MOD LSHIFT RSHIFT BAND.
 %right NOT.
-%nonassoc PAREN ASSIGN BASSIGN COLON.
+%nonassoc LPAREN ASSIGN BASSIGN COLON.
 
 module ::= chunk.
 
 chunk ::= .
-chunk ::= chunk expr.
-block ::= LBRACE chunk RBRACE.
+chunk ::= chunk stat.
+chunk ::= chunk expr SEMICOLON.
+
+block ::= LBRACE chunk endstat RBRACE.
 
 ident ::= NAME.
-tname ::= NAME.
+
+brackets ::= .
+brackets ::= brackets LBRACKET RBRACKET.
+
+funcsig ::= tname LPAREN bindlist RPAREN.
+
+tname ::= NAME brackets.
+tname ::= funcsig.
 
 literal ::= INTEGER.
 literal ::= FLOAT.
@@ -32,15 +41,37 @@ literal ::= FALSE.
 literal ::= TRUE.
 literal ::= block.
 
-expr ::= ident COLON tname.
-expr ::= ident COLON tname ASSIGN expr.
-expr ::= ident ASSIGN expr.
-expr ::= ident BASSIGN expr.
+bindlist ::= .
+bindlist ::= bind.
+bindlist ::= bindlist COMMA bind.
+
+bind ::= ident COLON tname.
+
+stat ::= bind.
+stat ::= bind ASSIGN expr.
+stat ::= expr LPAREN exprlist RPAREN.
+stat ::= IF LPAREN expr RPAREN BLOCK.
+stat ::= IF LPAREN expr RPAREN block ELSE block.
+stat ::= FOR LPAREN exprlist SEMICOLON expr SEMICOLON exprlist RPAREN block.
+stat ::= WHILE LPAREN expr RPAREN block.
+stat ::= DO block WHILE LPAREN expr RPAREN.
+
+endstat ::= .
+endstat ::= RETURN expr.
+endstat ::= BREAK.
+endstat ::= CONTINUE.
+
+exprlist ::= .
+exprlist ::= expr.
+exprlist ::= exprlist COMMA expr.
 
 expr ::= ident.
 expr ::= literal.
 
-expr ::= LPAREN expr RPAREN. [PAREN]
+expr ::= ident ASSIGN expr.
+expr ::= ident BASSIGN expr.
+
+expr ::= LPAREN expr RPAREN.
 
 expr ::= expr LT expr.
 expr ::= expr LE expr.

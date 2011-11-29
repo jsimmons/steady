@@ -61,9 +61,21 @@ typedef struct
     comment = '//' any_safe*;
 
     main := |*
+        ','  => { SIMPLE_TOKEN(TOK_COMMA); };
         ':'  => { SIMPLE_TOKEN(TOK_COLON); };
+        ';'  => { SIMPLE_TOKEN(TOK_SEMICOLON); };
         '='  => { SIMPLE_TOKEN(TOK_ASSIGN); };
-        ':=' => { SIMPLE_TOKEN(TOK_BASSIGN); };
+
+        'if' => { SIMPLE_TOKEN(TOK_IF); };
+        'else' => { SIMPLE_TOKEN(TOK_ELSE); };
+        'for' => { SIMPLE_TOKEN(TOK_FOR); };
+        'while' => { SIMPLE_TOKEN(TOK_WHILE); };
+        'do' => { SIMPLE_TOKEN(TOK_DO); };
+
+        'return' => { SIMPLE_TOKEN(TOK_RETURN); };
+        'break' => { SIMPLE_TOKEN(TOK_BREAK); };
+        'continue' => { SIMPLE_TOKEN(TOK_CONTINUE); };
+
         '~'  => { SIMPLE_TOKEN(TOK_NOT); };
         '+'  => { SIMPLE_TOKEN(TOK_ADD); };
         '-'  => { SIMPLE_TOKEN(TOK_SUB); };
@@ -75,6 +87,7 @@ typedef struct
         '^'  => { SIMPLE_TOKEN(TOK_BXOR); };
         '<<' => { SIMPLE_TOKEN(TOK_LSHIFT); };
         '>>' => { SIMPLE_TOKEN(TOK_RSHIFT); };
+
         '&&' => { SIMPLE_TOKEN(TOK_AND); };
         '||' => { SIMPLE_TOKEN(TOK_OR); };
         '<'  => { SIMPLE_TOKEN(TOK_LT); };
@@ -83,10 +96,14 @@ typedef struct
         '~=' => { SIMPLE_TOKEN(TOK_NE); };
         '>=' => { SIMPLE_TOKEN(TOK_GE); };
         '>'  => { SIMPLE_TOKEN(TOK_GT); };
+
         '('  => { SIMPLE_TOKEN(TOK_LPAREN); };
         ')'  => { SIMPLE_TOKEN(TOK_RPAREN); };
+        '['  => { SIMPLE_TOKEN(TOK_LBRACKET); };
+        ']'  => { SIMPLE_TOKEN(TOK_RBRACKET); };
         '{'  => { SIMPLE_TOKEN(TOK_LBRACE); };
         '}'  => { SIMPLE_TOKEN(TOK_RBRACE); };
+
         'null'  => { SIMPLE_TOKEN(TOK_NULL); };
         'false'  => { SIMPLE_TOKEN(TOK_FALSE); };
         'true'  => { SIMPLE_TOKEN(TOK_TRUE); };
@@ -147,7 +164,7 @@ void steady_parse(const char *source, size_t length)
 
     SToken token;
     void *parser = ParseAlloc(malloc);
-    ParseTrace(stdout, "TRACE ");
+    //ParseTrace(stdout, "TRACE ");
 
     %% write init;
     %% write exec;
