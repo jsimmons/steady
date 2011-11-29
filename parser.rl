@@ -65,6 +65,8 @@ typedef struct
         ':'  => { SIMPLE_TOKEN(TOK_COLON); };
         ';'  => { SIMPLE_TOKEN(TOK_SEMICOLON); };
         '='  => { SIMPLE_TOKEN(TOK_ASSIGN); };
+        ':=' => { SIMPLE_TOKEN(TOK_BASSIGN); };
+        '<-' => { SIMPLE_TOKEN(TOK_FSIG); };
 
         'if' => { SIMPLE_TOKEN(TOK_IF); };
         'else' => { SIMPLE_TOKEN(TOK_ELSE); };
@@ -164,7 +166,7 @@ void steady_parse(const char *source, size_t length)
 
     SToken token;
     void *parser = ParseAlloc(malloc);
-    //ParseTrace(stdout, "TRACE ");
+    ParseTrace(stdout, "TRACE ");
 
     %% write init;
     %% write exec;

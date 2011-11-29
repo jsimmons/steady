@@ -2,8 +2,8 @@
 %token_type {SToken*}
 
 %syntax_error {
-    fprintf(stderr, "Houston We Have a Problem over at %d:%d\n", TOKEN->line,
-            TOKEN->column);
+    fprintf(stderr, "===============\n ERROR @ %d:%d\n===============\n",
+            TOKEN->line, TOKEN->column);
 }
 
 %left OR.
@@ -18,19 +18,19 @@ module ::= chunk.
 
 chunk ::= .
 chunk ::= chunk stat.
+chunk ::= chunk call SEMICOLON.
 chunk ::= chunk expr SEMICOLON.
 
 block ::= LBRACE chunk endstat RBRACE.
 
 ident ::= NAME.
 
+// This is horrible and breaks indexing.
 brackets ::= .
 brackets ::= brackets LBRACKET RBRACKET.
 
-funcsig ::= tname LPAREN bindlist RPAREN.
-
-tname ::= NAME brackets.
-tname ::= funcsig.
+type ::= NAME brackets.
+type ::= type FSIG LPAREN bindlist RPAREN.
 
 literal ::= INTEGER.
 literal ::= FLOAT.
@@ -41,25 +41,25 @@ literal ::= FALSE.
 literal ::= TRUE.
 literal ::= block.
 
-bindlist ::= .
-bindlist ::= bind.
-bindlist ::= bindlist COMMA bind.
+call ::= expr LPAREN exprlist RPAREN.
 
-bind ::= ident COLON tname.
-
-stat ::= bind.
-stat ::= bind ASSIGN expr.
-stat ::= expr LPAREN exprlist RPAREN.
-stat ::= IF LPAREN expr RPAREN BLOCK.
+stat ::= IF LPAREN expr RPAREN block.
 stat ::= IF LPAREN expr RPAREN block ELSE block.
 stat ::= FOR LPAREN exprlist SEMICOLON expr SEMICOLON exprlist RPAREN block.
 stat ::= WHILE LPAREN expr RPAREN block.
 stat ::= DO block WHILE LPAREN expr RPAREN.
 
+// TODO: Fix explicit semi-coloning.
 endstat ::= .
-endstat ::= RETURN expr.
-endstat ::= BREAK.
-endstat ::= CONTINUE.
+endstat ::= RETURN expr SEMICOLON.
+endstat ::= BREAK SEMICOLON.
+endstat ::= CONTINUE SEMICOLON.
+
+bindlist ::= .
+bindlist ::= bind.
+bindlist ::= bindlist COMMA bind.
+
+bind ::= ident COLON type.
 
 exprlist ::= .
 exprlist ::= expr.
@@ -68,6 +68,9 @@ exprlist ::= exprlist COMMA expr.
 expr ::= ident.
 expr ::= literal.
 
+expr ::= bind.
+// name := args[0];
+expr ::= bind ASSIGN expr.
 expr ::= ident ASSIGN expr.
 expr ::= ident BASSIGN expr.
 
