@@ -1,3 +1,8 @@
+%include {
+#include <assert.h>
+#include "lex.h"
+}
+
 %token_prefix TOK_
 %token_type {SToken*}
 

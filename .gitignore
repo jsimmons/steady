@@ -1,5 +1,8 @@
-steady
+*.o
 .*.swp
-parser.c
+
 grammar.c
 grammar.h
+lex.c
+
+steady
